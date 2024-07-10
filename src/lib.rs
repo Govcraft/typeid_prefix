@@ -134,7 +134,7 @@ where
         TypeIdPrefix::validate(&input).unwrap_or_else(|e| {
             #[cfg(feature = "instrument")]
             tracing::warn!("Invalid TypeIdPrefix: {:?}. Using empty string instead.", e);
-            TypeIdPrefix("".to_string())
+            TypeIdPrefix(String::new())
         })
     }
 }
