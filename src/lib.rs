@@ -168,7 +168,25 @@ impl PartialEq<TypeIdPrefix> for &str {
 impl TryFrom<String> for TypeIdPrefix
 {
     type Error = ValidationError;
-
+    
+    /// Attempts to create a `TypeIdPrefix` from a `String`.
+    ///
+    /// # Errors
+    ///
+    /// Returns a `ValidationError` if the input string is not a valid TypeID prefix.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use typeid_prefix::TypeIdPrefix;
+    /// use std::convert::TryFrom;
+    ///
+    /// let valid = TypeIdPrefix::try_from("valid_prefix".to_string()).unwrap();
+    /// assert_eq!(valid.as_str(), "valid_prefix");
+    ///
+    /// let invalid = TypeIdPrefix::try_from("Invalid_Prefix".to_string());
+    /// assert!(invalid.is_err());
+    /// ```
     fn try_from(input: String) -> Result<Self, Self::Error> {
         TypeIdPrefix::validate(input.as_ref())
     }
