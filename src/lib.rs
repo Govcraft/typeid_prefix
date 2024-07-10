@@ -55,6 +55,26 @@ use crate::error::ValidationError;
 
 mod error;
 
+/// Represents a valid TypeID prefix as defined by the TypeID specification.
+///
+/// A `TypeIdPrefix` is guaranteed to:
+/// - Have a maximum length of 63 characters
+/// - Contain only lowercase ASCII letters and underscores
+/// - Not start or end with an underscore
+/// - Start and end with a lowercase letter
+///
+/// # Examples
+///
+/// ```
+/// use typeid_prefix::TypeIdPrefix;
+/// use std::convert::TryFrom;
+///
+/// let prefix = TypeIdPrefix::try_from("valid_prefix").unwrap();
+/// assert_eq!(prefix.as_str(), "valid_prefix");
+///
+/// let invalid = TypeIdPrefix::try_from("Invalid_Prefix");
+/// assert!(invalid.is_err());
+/// ```
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "arbitrary", derive(arbitrary::Arbitrary))]
 pub struct TypeIdPrefix(String);
