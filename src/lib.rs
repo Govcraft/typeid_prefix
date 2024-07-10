@@ -1,3 +1,4 @@
+#![deny(unsafe_code)]
 //! # TypeID Prefix
 //!
 //! This crate provides a type-safe implementation of the TypePrefix section of the
