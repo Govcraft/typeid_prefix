@@ -5,7 +5,7 @@
 #![warn(clippy::nursery)]
 #![allow(clippy::module_name_repetitions)]
 #![cfg_attr(docsrs, feature(doc_cfg))]
-//! # TypeID Prefix
+//! # `TypeID` Prefix
 //!
 //! This crate provides a type-safe implementation of the TypePrefix section of the
 //! [TypeID Specification](https://github.com/jetpack-io/typeid).
@@ -263,7 +263,7 @@ impl TypeIdPrefix {
 
         Ok(TypeIdPrefix(input.to_string()))
     }
-    
+
     fn clean_inner(input: &str) -> String {
         let mut result = input.to_string();
         result = result.to_lowercase();
