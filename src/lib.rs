@@ -288,7 +288,7 @@ impl TypeIdPrefix {
         result
     }
 
-    /// Returns a string slice of the TypeID prefix.
+    /// Returns a string slice of the `TypeID` prefix.
     ///
     /// # Examples
     ///
