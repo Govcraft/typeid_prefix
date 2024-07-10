@@ -274,7 +274,22 @@ impl TypeIdPrefix {
         Ok(TypeIdPrefix(input.to_string()))
     }
 
-
+    /// Cleans and sanitizes an input string to create a valid TypeID prefix.
+    ///
+    /// This method:
+    /// - Converts the input to lowercase
+    /// - Truncates to 63 characters if necessary
+    /// - Removes all characters that are not lowercase ASCII letters or underscores
+    /// - Removes leading and trailing underscores
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use typeid_prefix::TypeIdPrefix;
+    ///
+    /// let cleaned = TypeIdPrefix::clean("__Invalid_STRING_123!@#__");
+    /// assert_eq!(cleaned, "invalid_string");
+    /// ```
     #[cfg_attr(test, allow(dead_code))]
     pub fn clean(input: &str) -> String {
         let mut result = input.to_string();
