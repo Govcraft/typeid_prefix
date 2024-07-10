@@ -264,12 +264,7 @@ impl TypeIdPrefix {
         Ok(TypeIdPrefix(input.to_string()))
     }
 
-    #[cfg(test)]
-    pub fn clean(input: &str) -> String {
-        Self::clean_inner(input)
-    }
 
-    #[cfg_attr(test, allow(dead_code))]
     fn clean_inner(input: &str) -> String {
         let mut result = input.to_string();
         result = result.to_lowercase();
