@@ -299,6 +299,7 @@ impl TypeIdPrefix {
     /// let prefix = TypeIdPrefix::try_from("valid_prefix").unwrap();
     /// assert_eq!(prefix.as_str(), "valid_prefix");
     /// ```
+    #[must_use]
     pub fn as_str(&self) -> &str {
         &self.0
     }
