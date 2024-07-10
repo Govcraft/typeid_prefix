@@ -7,7 +7,7 @@
 #![cfg_attr(docsrs, feature(doc_cfg))]
 //! # `TypeID` Prefix
 //!
-//! This crate provides a type-safe implementation of the TypePrefix section of the
+//! This crate provides a type-safe implementation of the `TypePrefix` section of the
 //! [TypeID Specification](https://github.com/jetpack-io/typeid).
 //!
 //! The main type provided by this crate is [`TypeIdPrefix`], which represents a valid
