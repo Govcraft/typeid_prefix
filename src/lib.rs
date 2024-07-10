@@ -222,7 +222,7 @@ impl TryFrom<&str> for TypeIdPrefix
     /// assert!(invalid.is_err());
     /// ```
     fn try_from(input: &str) -> Result<Self, Self::Error> {
-        TypeIdPrefix::validate(input)
+        Self::validate(input)
     }
 }
 
