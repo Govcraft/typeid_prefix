@@ -31,7 +31,7 @@ mod verification {
     fn verify_typeidprefix_try_from_and_sanitize() {
         let input: TypeIdPrefixInput = kani::any();
         let try_from_result = TypeIdPrefix::try_from(input.input.clone());
-        let sanitized = input.input.from_sanitized();
+        let sanitized = input.input.sanitize_and_create();
 
         // Verify try_from behavior
         if input.input.len() > 63 {
@@ -70,7 +70,7 @@ mod verification {
     fn verify_typeidprefix_try_from_str_and_sanitize() {
         let input: TypeIdPrefixInput = kani::any();
         let try_from_result = TypeIdPrefix::try_from(input.input.as_str());
-        let sanitized = input.input.from_sanitized();
+        let sanitized = input.input.sanitize_and_create();
 
         // Verify try_from behavior (same as in the previous proof)
         if input.input.len() > 63 {
