@@ -93,6 +93,13 @@ pub struct TypeIdPrefix(String);
 /// assert_eq!(sanitized.as_str(), "invalidstring");
 /// ```
 pub trait Sanitize {
+    /// Sanitizes the input and creates a valid `TypeIdPrefix`.
+    ///
+    /// This method will remove invalid characters, convert to lowercase,
+    /// and ensure the result conforms to the TypeID specification.
+    ///
+    /// If the input is invalid and cannot be sanitized into a valid prefix,
+    /// an empty `TypeIdPrefix` will be returned.
     fn sanitize_and_create(&self) -> TypeIdPrefix
     where
         Self: AsRef<str>;
