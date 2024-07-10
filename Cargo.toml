@@ -1,0 +1,21 @@
+[package]
+name = "typeid_prefix"
+version = "0.1.0"
+edition = "2021"
+
+[features]
+default = []
+instrument = ["tracing"]
+arbitrary = ["dep:arbitrary"]
+tracing = ["dep:tracing"]
+
+[dependencies]
+arbitrary = { version = "1.3.2", features = ["derive"], optional = true}
+tracing = { version = "0.1.40", optional = true }
+
+[dev-dependencies]
+proptest = { version = "1.5.0", features = ["proptest-macro"] }
+arbitrary = { version = "1.3.2", features = ["derive"]}
+
+[lints.rust]
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(kani)'] }

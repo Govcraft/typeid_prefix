@@ -1,0 +1,331 @@
+use std::cmp::PartialEq;
+use std::convert::TryFrom;
+use std::fmt;
+use std::ops::Deref;
+
+#[cfg(feature = "instrument")]
+use tracing;
+
+use crate::error::ValidationError;
+
+mod error;
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "arbitrary", derive(arbitrary::Arbitrary))]
+pub struct TypeIdPrefix(String);
+
+
+pub trait Sanitize {
+    fn from_sanitized(&self) -> TypeIdPrefix
+    where
+        Self: AsRef<str>;
+}
+
+pub trait Validate {}
+
+impl<T> Validate for T
+where
+    T: AsRef<str> + TryFrom<T, Error=ValidationError>,
+{}
+
+
+#[allow(unused_variables)]
+impl<T> Sanitize for T
+where
+    T: AsRef<str>,
+{
+    fn from_sanitized(&self) -> TypeIdPrefix {
+        let input = TypeIdPrefix::clean(self.as_ref());
+        TypeIdPrefix::validate(&input).unwrap_or_else(|e| {
+            #[cfg(feature = "instrument")]
+            tracing::warn!("Invalid TypeIdPrefix: {:?}. Using empty string instead.", e);
+            TypeIdPrefix("".to_string())
+        })
+    }
+}
+
+impl Deref for TypeIdPrefix {
+    type Target = String;
+
+    fn deref(&self) -> &String {
+        &self.0
+    }
+}
+
+impl PartialEq<String> for TypeIdPrefix {
+    fn eq(&self, other: &String) -> bool {
+        &self.0 == other
+    }
+}
+
+impl PartialEq<TypeIdPrefix> for String {
+    fn eq(&self, other: &TypeIdPrefix) -> bool {
+        self == &other.0
+    }
+}
+
+// You can also implement PartialEq<&str> if needed
+impl PartialEq<&str> for TypeIdPrefix {
+    fn eq(&self, other: &&str) -> bool {
+        &self.0 == other
+    }
+}
+
+impl PartialEq<TypeIdPrefix> for &str {
+    fn eq(&self, other: &TypeIdPrefix) -> bool {
+        self == &other.0
+    }
+}
+
+impl TryFrom<String> for TypeIdPrefix
+{
+    type Error = ValidationError;
+
+    fn try_from(input: String) -> Result<Self, Self::Error> {
+        TypeIdPrefix::validate(input.as_ref())
+    }
+}
+
+impl TryFrom<&str> for TypeIdPrefix
+{
+    type Error = ValidationError;
+
+    fn try_from(input: &str) -> Result<Self, Self::Error> {
+        TypeIdPrefix::validate(input)
+    }
+}
+
+
+impl TypeIdPrefix {
+    fn validate(input: &str) -> Result<Self, ValidationError> {
+        if input.len() > 63 {
+            return Err(ValidationError::ExceedsMaxLength);
+        }
+
+        if input.is_empty() {
+            return Ok(TypeIdPrefix(input.to_string()));
+        }
+
+        if !input.is_ascii() {
+            return Err(ValidationError::ContainsInvalidCharacters);
+        }
+
+        if input.starts_with('_') {
+            return Err(ValidationError::StartsWithUnderscore);
+        }
+
+        if input.ends_with('_') {
+            return Err(ValidationError::EndsWithUnderscore);
+        }
+
+        if !input.starts_with(|c: char| c.is_ascii_lowercase()) {
+            return Err(ValidationError::InvalidStartCharacter);
+        }
+
+        if !input.ends_with(|c: char| c.is_ascii_lowercase()) {
+            return Err(ValidationError::InvalidEndCharacter);
+        }
+
+        if !input.chars().all(|c| c.is_ascii_lowercase() || c == '_') {
+            return Err(ValidationError::ContainsInvalidCharacters);
+        }
+
+        Ok(TypeIdPrefix(input.to_string()))
+    }
+
+
+    #[cfg_attr(test, allow(dead_code))]
+    pub fn clean(input: &str) -> String {
+        let mut result = input.to_string();
+        result = result.to_lowercase();
+        // Safely truncate to 63 characters if necessary
+        if result.len() > 63 {
+            result = result.chars().take(63).collect();
+        }
+
+        result = result.to_ascii_lowercase().chars()
+            .filter(|&c| (c.is_ascii_lowercase() || c == '_') && c.is_ascii())
+            .collect::<String>();
+
+        // Remove leading and trailing underscores
+        while result.starts_with('_') {
+            result.remove(0);
+        }
+
+        while result.ends_with('_') {
+            result.pop();
+        }
+
+        result
+    }
+
+    pub fn as_str(&self) -> &str {
+        &self.0
+    }
+}
+
+
+impl fmt::Display for TypeIdPrefix {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.0)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use std::convert::TryFrom;
+
+    use super::*;
+
+    #[test]
+    fn test_type_id_spaces_sanitize() {
+        assert_eq!(
+            "Invalid String with Spaces!!__".from_sanitized().as_str(),
+            "invalidstringwithspaces"
+        );
+    }
+
+    #[test]
+    fn test_type_id_truncation() {
+        assert_eq!(
+            "A_valid_string_that_is_way_too_long_and_should_be_truncated_to_63_chars".from_sanitized().as_str(),
+            "a_valid_string_that_is_way_too_long_and_should_be_truncated_to"
+        );
+    }
+
+    #[test]
+    fn test_type_id_underscores_sanitize() {
+        assert_eq!(
+            "_underscores__everywhere__".from_sanitized().as_str(),
+            "underscores__everywhere"
+        );
+    }
+
+    #[test]
+    fn test_typeid_prefix_non_ascii() {
+        assert!(TypeIdPrefix::try_from("🌀").is_err());
+        let sanitized_input = "🌀".from_sanitized();
+        assert!(sanitized_input.as_str().is_empty(), "Prefix was not empty: {sanitized_input}");
+    }
+
+    #[test]
+    fn test_typeid_prefix_empty() {
+        assert!(TypeIdPrefix::try_from("").is_ok());
+    }
+
+    #[test]
+    fn test_typeid_prefix_single_char() {
+        assert!(TypeIdPrefix::try_from("a").is_ok());
+    }
+
+    #[test]
+    fn test_typeid_prefix_valid_string() {
+        assert!(TypeIdPrefix::try_from("valid_string").is_ok());
+    }
+
+    #[test]
+    fn test_typeid_prefix_with_underscores() {
+        assert!(TypeIdPrefix::try_from("valid_string_with_underscores").is_ok());
+    }
+
+    #[test]
+    fn test_typeid_prefix_exceeds_max_length() {
+        let input = "a_valid_string_with_underscores_and_length_of_63_characters_____";
+        assert_eq!(
+            TypeIdPrefix::try_from(input).unwrap_err(),
+            ValidationError::ExceedsMaxLength
+        );
+        assert_eq!(
+            input.from_sanitized().as_str(),
+            "a_valid_string_with_underscores_and_length_of__characters"
+        );
+    }
+
+    #[test]
+    fn test_typeid_prefix_invalid_characters() {
+        assert_eq!(
+            TypeIdPrefix::try_from("InvalidString").unwrap_err(),
+            ValidationError::InvalidStartCharacter
+        );
+        assert_eq!("InvalidString".from_sanitized().as_str(), "invalidstring");
+    }
+
+    #[test]
+    fn test_typeid_prefix_starts_with_underscore() {
+        assert_eq!(
+            TypeIdPrefix::try_from("_invalid").unwrap_err(),
+            ValidationError::StartsWithUnderscore
+        );
+        assert_eq!("_invalid".from_sanitized().as_str(), "invalid");
+    }
+
+    #[test]
+    fn test_typeid_prefix_ends_with_underscore() {
+        assert_eq!(
+            TypeIdPrefix::try_from("invalid_").unwrap_err(),
+            ValidationError::EndsWithUnderscore
+        );
+        assert_eq!("invalid_".from_sanitized().as_str(), "invalid");
+    }
+
+    #[test]
+    fn test_typeid_prefix_invalid_characters_with_spaces() {
+        assert_eq!(
+            TypeIdPrefix::try_from("invalid string with spaces").unwrap_err(),
+            ValidationError::ContainsInvalidCharacters
+        );
+        assert_eq!("invalid string with spaces".from_sanitized().as_str(), "invalidstringwithspaces");
+    }
+
+    #[test]
+    fn test_typeid_prefix_max_length() {
+        let input = "a".repeat(63);
+        assert!(TypeIdPrefix::try_from(input.as_str()).is_ok());
+    }
+
+    #[test]
+    fn test_typeid_prefix_max_length_exceeded() {
+        let input = "a".repeat(64);
+        assert_eq!(
+            TypeIdPrefix::try_from(input.as_str()).unwrap_err(),
+            ValidationError::ExceedsMaxLength
+        );
+        assert_eq!(input.from_sanitized().as_str(), "a".repeat(63));
+    }
+
+    #[test]
+    fn test_typeid_prefix_contains_uppercase() {
+        assert_eq!(
+            TypeIdPrefix::try_from("InvalidString").unwrap_err(),
+            ValidationError::InvalidStartCharacter
+        );
+        assert_eq!("InvalidString".from_sanitized().as_str(), "invalidstring");
+    }
+
+    #[test]
+    fn test_typeid_prefix_non_alphanumeric() {
+        assert_eq!(
+            TypeIdPrefix::try_from("invalid_string!").unwrap_err(),
+            ValidationError::InvalidEndCharacter
+        );
+        assert_eq!("invalid_string!".from_sanitized().as_str(), "invalid_string");
+    }
+
+    #[test]
+    fn test_typeid_prefix_numeric_start() {
+        assert_eq!(
+            TypeIdPrefix::try_from("1invalid").unwrap_err(),
+            ValidationError::InvalidStartCharacter
+        );
+        assert_eq!("1invalid".from_sanitized().as_str(), "invalid");
+    }
+
+    #[test]
+    fn test_typeid_prefix_numeric_end() {
+        assert_eq!(
+            TypeIdPrefix::try_from("invalid1").unwrap_err(),
+            ValidationError::InvalidEndCharacter
+        );
+        assert_eq!("invalid1".from_sanitized().as_str(), "invalid");
+    }
+}

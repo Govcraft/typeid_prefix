@@ -1,1 +1,1 @@
-# type_id_prefix
+# typeid_prefix
