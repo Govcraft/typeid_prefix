@@ -11,7 +11,7 @@
 //! [TypeID Specification](https://github.com/jetpack-io/typeid).
 //!
 //! The main type provided by this crate is [`TypeIdPrefix`], which represents a valid
-//! TypeID prefix. This type ensures that all instances conform to the TypeID specification:
+//! `TypeID` prefix. This type ensures that all instances conform to the `TypeID` specification:
 //!
 //! - Maximum length of 63 characters
 //! - Contains only lowercase ASCII letters and underscores
@@ -20,9 +20,9 @@
 //!
 //! ## Features
 //!
-//! - **Type-safe**: Ensures that TypeID prefixes conform to the specification.
-//! - **Validation**: Provides robust validation for TypeID prefixes.
-//! - **Sanitization**: Offers methods to clean and sanitize input strings into valid TypeID prefixes.
+//! - **Type-safe**: Ensures that `TypeID` prefixes conform to the specification.
+//! - **Validation**: Provides robust validation for `TypeID` prefixes.
+//! - **Sanitization**: Offers methods to clean and sanitize input strings into valid `TypeID` prefixes.
 //! - **Zero-cost abstractions**: Designed to have minimal runtime overhead.
 //! - **Optional tracing**: Integrates with the `tracing` crate for logging (optional feature).
 //!
@@ -62,7 +62,7 @@ use crate::error::ValidationError;
 
 mod error;
 
-/// Represents a valid TypeID prefix as defined by the TypeID specification.
+/// Represents a valid `TypeID` prefix as defined by the `TypeID` specification.
 ///
 /// A `TypeIdPrefix` is guaranteed to:
 /// - Have a maximum length of 63 characters
@@ -103,7 +103,7 @@ pub trait Sanitize {
     /// Sanitizes the input and creates a valid `TypeIdPrefix`.
     ///
     /// This method will remove invalid characters, convert to lowercase,
-    /// and ensure the result conforms to the TypeID specification.
+    /// and ensure the result conforms to the `TypeID` specification.
     ///
     /// If the input is invalid and cannot be sanitized into a valid prefix,
     /// an empty `TypeIdPrefix` will be returned.
@@ -112,7 +112,7 @@ pub trait Sanitize {
         Self: AsRef<str>;
 }
 
-/// A marker trait for types that can be validated as a TypeID prefix.
+/// A marker trait for types that can be validated as a `TypeID` prefix.
 ///
 /// This trait is automatically implemented for any type that implements
 /// `AsRef<str>` and can be converted to a `TypeIdPrefix` using `TryFrom`.
@@ -180,7 +180,7 @@ impl TryFrom<String> for TypeIdPrefix
     ///
     /// # Errors
     ///
-    /// Returns a `ValidationError` if the input string is not a valid TypeID prefix.
+    /// Returns a `ValidationError` if the input string is not a valid `TypeID` prefix.
     ///
     /// # Examples
     ///
@@ -207,7 +207,7 @@ impl TryFrom<&str> for TypeIdPrefix
     ///
     /// # Errors
     ///
-    /// Returns a `ValidationError` if the input string is not a valid TypeID prefix.
+    /// Returns a `ValidationError` if the input string is not a valid `TypeID` prefix.
     ///
     /// # Examples
     ///
