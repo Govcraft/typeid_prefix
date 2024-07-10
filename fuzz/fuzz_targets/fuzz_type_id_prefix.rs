@@ -17,8 +17,8 @@ fuzz_target!(|input: TypeIdPrefixInput| {
     // Test TypeIdPrefix::try_from with &str
     let try_from_str_result = TypeIdPrefix::try_from(input.prefix.as_str());
 
-    // Test from_sanitized
-    let sanitized = input.prefix.from_sanitized();
+    // Test sanitize_and_create
+    let sanitized = input.prefix.sanitize_and_create();
 
     // Ensure that try_from results are consistent for String and &str
     assert_eq!(try_from_string_result.is_ok(), try_from_str_result.is_ok());
