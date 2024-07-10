@@ -234,7 +234,7 @@ impl TypeIdPrefix {
         }
 
         if input.is_empty() {
-            return Ok(TypeIdPrefix(input.to_string()));
+            return Ok(Self(input.to_string()));
         }
 
         if !input.is_ascii() {
