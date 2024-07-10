@@ -263,8 +263,7 @@ impl TypeIdPrefix {
 
         Ok(TypeIdPrefix(input.to_string()))
     }
-
-
+    
     fn clean_inner(input: &str) -> String {
         let mut result = input.to_string();
         result = result.to_lowercase();
