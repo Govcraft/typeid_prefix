@@ -261,7 +261,7 @@ impl TypeIdPrefix {
             return Err(ValidationError::ContainsInvalidCharacters);
         }
 
-        Ok(TypeIdPrefix(input.to_string()))
+        Ok(Self(input.to_string()))
     }
 
     fn clean_inner(input: &str) -> String {
