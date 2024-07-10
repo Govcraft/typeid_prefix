@@ -1,4 +1,10 @@
 #![deny(unsafe_code)]
+#![deny(missing_docs)]
+#![deny(rustdoc::broken_intra_doc_links)]
+#![warn(clippy::pedantic)]
+#![warn(clippy::nursery)]
+#![allow(clippy::module_name_repetitions)]
+#![cfg_attr(docsrs, feature(doc_cfg))]
 //! # TypeID Prefix
 //!
 //! This crate provides a type-safe implementation of the TypePrefix section of the
@@ -124,7 +130,7 @@ where
     T: AsRef<str>,
 {
     fn sanitize_and_create(&self) -> TypeIdPrefix {
-        let input = TypeIdPrefix::clean(self.as_ref());
+        let input = TypeIdPrefix::clean_inner(self.as_ref());
         TypeIdPrefix::validate(&input).unwrap_or_else(|e| {
             #[cfg(feature = "instrument")]
             tracing::warn!("Invalid TypeIdPrefix: {:?}. Using empty string instead.", e);
@@ -258,8 +264,13 @@ impl TypeIdPrefix {
         Ok(TypeIdPrefix(input.to_string()))
     }
 
-    #[cfg_attr(test, allow(dead_code))]
+    #[cfg(test)]
     pub fn clean(input: &str) -> String {
+        Self::clean_inner(input)
+    }
+
+    #[cfg_attr(test, allow(dead_code))]
+    fn clean_inner(input: &str) -> String {
         let mut result = input.to_string();
         result = result.to_lowercase();
         // Safely truncate to 63 characters if necessary
