@@ -195,7 +195,7 @@ impl TryFrom<String> for TypeIdPrefix
     /// assert!(invalid.is_err());
     /// ```
     fn try_from(input: String) -> Result<Self, Self::Error> {
-        TypeIdPrefix::validate(input.as_ref())
+        Self::validate(input.as_ref())
     }
 }
 
