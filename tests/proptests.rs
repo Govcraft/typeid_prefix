@@ -8,7 +8,7 @@ proptest! {
     #[test]
     fn test_typeidprefix_try_from_and_sanitize(input in "\\PC*") {
         let try_from_result = TypeIdPrefix::try_from(input.clone());
-        let sanitized = input.from_sanitized();
+        let sanitized = input.sanitize_and_create();
 
         // Test TypeIdPrefix::try_from
         if input.len() > 63 {
@@ -40,7 +40,7 @@ proptest! {
     #[test]
     fn test_typeidprefix_try_from_str_and_sanitize(input in "\\PC*") {
         let try_from_result = TypeIdPrefix::try_from(input.as_str());
-        let sanitized = input.from_sanitized();
+        let sanitized = input.sanitize_and_create();
 
         // Test TypeIdPrefix::try_from for &str
         if input.len() > 63 {
@@ -71,7 +71,7 @@ proptest! {
 
     #[test]
     fn test_typeidprefix_clean(input in ".{0,100}") {
-        let cleaned = input.from_sanitized();
+        let cleaned = input.sanitize_and_create();
         prop_assert!(cleaned.len() <= 63);
         prop_assert!(cleaned.chars().all(|c| c.is_ascii_lowercase() || c == '_'));
         prop_assert!(!cleaned.starts_with('_'));
