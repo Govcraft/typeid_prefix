@@ -221,23 +221,6 @@ impl TryFrom<&str> for TypeIdPrefix
 
 
 impl TypeIdPrefix {
-    /// Validates a string slice and creates a `TypeIdPrefix` if it's valid.
-    ///
-    /// # Errors
-    ///
-    /// Returns a `ValidationError` if the input string is not a valid TypeID prefix.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use typeid_prefix::TypeIdPrefix;
-    ///
-    /// let valid = TypeIdPrefix::validate("valid_prefix").unwrap();
-    /// assert_eq!(valid.as_str(), "valid_prefix");
-    ///
-    /// let invalid = TypeIdPrefix::validate("Invalid_Prefix");
-    /// assert!(invalid.is_err());
-    /// ```
     fn validate(input: &str) -> Result<Self, ValidationError> {
         if input.len() > 63 {
             return Err(ValidationError::ExceedsMaxLength);
@@ -274,22 +257,6 @@ impl TypeIdPrefix {
         Ok(TypeIdPrefix(input.to_string()))
     }
 
-    /// Cleans and sanitizes an input string to create a valid TypeID prefix.
-    ///
-    /// This method:
-    /// - Converts the input to lowercase
-    /// - Truncates to 63 characters if necessary
-    /// - Removes all characters that are not lowercase ASCII letters or underscores
-    /// - Removes leading and trailing underscores
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use typeid_prefix::TypeIdPrefix;
-    ///
-    /// let cleaned = TypeIdPrefix::clean("__Invalid_STRING_123!@#__");
-    /// assert_eq!(cleaned, "invalid_string");
-    /// ```
     #[cfg_attr(test, allow(dead_code))]
     pub fn clean(input: &str) -> String {
         let mut result = input.to_string();
@@ -315,6 +282,17 @@ impl TypeIdPrefix {
         result
     }
 
+    /// Returns a string slice of the TypeID prefix.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use typeid_prefix::TypeIdPrefix;
+    /// use std::convert::TryFrom;
+    ///
+    /// let prefix = TypeIdPrefix::try_from("valid_prefix").unwrap();
+    /// assert_eq!(prefix.as_str(), "valid_prefix");
+    /// ```
     pub fn as_str(&self) -> &str {
         &self.0
     }
