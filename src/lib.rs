@@ -1,3 +1,48 @@
+//! # TypeID Prefix
+//!
+//! This crate provides a type-safe implementation of the TypePrefix section of the
+//! [TypeID Specification](https://github.com/jetpack-io/typeid).
+//!
+//! The main type provided by this crate is [`TypeIdPrefix`], which represents a valid
+//! TypeID prefix. This type ensures that all instances conform to the TypeID specification:
+//!
+//! - Maximum length of 63 characters
+//! - Contains only lowercase ASCII letters and underscores
+//! - Does not start or end with an underscore
+//! - Starts and ends with a lowercase letter
+//!
+//! ## Features
+//!
+//! - **Type-safe**: Ensures that TypeID prefixes conform to the specification.
+//! - **Validation**: Provides robust validation for TypeID prefixes.
+//! - **Sanitization**: Offers methods to clean and sanitize input strings into valid TypeID prefixes.
+//! - **Zero-cost abstractions**: Designed to have minimal runtime overhead.
+//! - **Optional tracing**: Integrates with the `tracing` crate for logging (optional feature).
+//!
+//! ## Usage
+//!
+//! ```rust
+//! use typeid_prefix::{TypeIdPrefix, Sanitize};
+//! use std::convert::TryFrom;
+//!
+//! // Create a TypeIdPrefix from a valid string
+//! let prefix = TypeIdPrefix::try_from("user").unwrap();
+//! assert_eq!(prefix.as_str(), "user");
+//!
+//! // Attempt to create from an invalid string
+//! let result = TypeIdPrefix::try_from("Invalid_Prefix");
+//! assert!(result.is_err());
+//!
+//! // Sanitize an invalid string
+//! let sanitized = "Invalid_Prefix123".sanitize_and_create();
+//! assert_eq!(sanitized.as_str(), "invalid_prefix");
+//! ```
+//!
+//! ## Optional Tracing
+//!
+//! When the `instrument` feature is enabled, the crate will log validation errors
+//! using the `tracing` crate.
+
 use std::cmp::PartialEq;
 use std::convert::TryFrom;
 use std::fmt;
