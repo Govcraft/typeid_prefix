@@ -79,7 +79,19 @@ mod error;
 #[cfg_attr(feature = "arbitrary", derive(arbitrary::Arbitrary))]
 pub struct TypeIdPrefix(String);
 
-
+/// A trait for sanitizing and creating a valid `TypeIdPrefix` from a given input.
+///
+/// This trait is implemented for any type that can be converted to a string slice (`AsRef<str>`).
+/// It provides a method to clean and create a valid `TypeIdPrefix`, even from invalid input.
+///
+/// # Examples
+///
+/// ```
+/// use typeid_prefix::Sanitize;
+///
+/// let sanitized = "Invalid String 123!@#".sanitize_and_create();
+/// assert_eq!(sanitized.as_str(), "invalidstring");
+/// ```
 pub trait Sanitize {
     fn sanitize_and_create(&self) -> TypeIdPrefix
     where
