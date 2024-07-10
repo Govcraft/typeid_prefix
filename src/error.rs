@@ -13,22 +13,22 @@ pub enum ValidationError {
 impl fmt::Display for ValidationError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let error_message = match self {
-            ValidationError::ExceedsMaxLength => {
+            Self::ExceedsMaxLength => {
                 "Input exceeds 63 characters"
             }
-            ValidationError::ContainsInvalidCharacters => {
+            Self::ContainsInvalidCharacters => {
                 "Input contains invalid characters: only lowercase ASCII letters and underscores are allowed"
             }
-            ValidationError::StartsWithUnderscore => {
+            Self::StartsWithUnderscore => {
                 "Input cannot start with an underscore"
             }
-            ValidationError::EndsWithUnderscore => {
+            Self::EndsWithUnderscore => {
                 "Input cannot end with an underscore"
             }
-            ValidationError::InvalidStartCharacter => {
+            Self::InvalidStartCharacter => {
                 "Input must start with a lowercase alphabetic character"
             }
-            ValidationError::InvalidEndCharacter => {
+            Self::InvalidEndCharacter => {
                 "Input must end with a lowercase alphabetic character"
             }
         };
