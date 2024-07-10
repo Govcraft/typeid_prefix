@@ -195,7 +195,7 @@ impl TryFrom<String> for TypeIdPrefix
 impl TryFrom<&str> for TypeIdPrefix
 {
     type Error = ValidationError;
-    
+
     /// Attempts to create a `TypeIdPrefix` from a string slice.
     ///
     /// # Errors
@@ -221,6 +221,23 @@ impl TryFrom<&str> for TypeIdPrefix
 
 
 impl TypeIdPrefix {
+    /// Validates a string slice and creates a `TypeIdPrefix` if it's valid.
+    ///
+    /// # Errors
+    ///
+    /// Returns a `ValidationError` if the input string is not a valid TypeID prefix.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use typeid_prefix::TypeIdPrefix;
+    ///
+    /// let valid = TypeIdPrefix::validate("valid_prefix").unwrap();
+    /// assert_eq!(valid.as_str(), "valid_prefix");
+    ///
+    /// let invalid = TypeIdPrefix::validate("Invalid_Prefix");
+    /// assert!(invalid.is_err());
+    /// ```
     fn validate(input: &str) -> Result<Self, ValidationError> {
         if input.len() > 63 {
             return Err(ValidationError::ExceedsMaxLength);
