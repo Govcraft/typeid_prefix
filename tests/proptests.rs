@@ -9,7 +9,7 @@ mod proofs;
 
 proptest! {
         #![proptest_config(Config {
-        cases:1000,
+        cases:10000,
         failure_persistence: Some(Box::new(FileFailurePersistence::WithSource("../src".into()))),
         .. Config::default()
     })]
