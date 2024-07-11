@@ -62,6 +62,21 @@ use crate::error::ValidationError;
 
 mod error;
 
+pub mod prelude {
+    //! A prelude for the `TypeID` prefix crate.
+    //!
+    //! This module contains the most commonly used items from the crate.
+    //!
+    //! # Usage
+    //!
+    //! ```
+    //! use typeid_prefix::prelude::*;
+    //! ```
+
+    pub use crate::{Sanitize, TypeIdPrefix, Validate};
+
+}
+
 /// Represents a valid `TypeID` prefix as defined by the `TypeID` specification.
 ///
 /// A `TypeIdPrefix` is guaranteed to:
