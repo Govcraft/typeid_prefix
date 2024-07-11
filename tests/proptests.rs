@@ -48,6 +48,7 @@ proptest! {
 
     #[test]
     fn test_typeidprefix_try_from_str_and_sanitize(input in "\\PC*") {
+        println!("Running test with input: {:?}", input); // Print each test input
         let try_from_result = TypeIdPrefix::try_from(input.as_str());
         let sanitized = input.create_prefix_sanitized();
 
@@ -80,6 +81,7 @@ proptest! {
 
     #[test]
     fn test_typeidprefix_clean(input in ".{0,100}") {
+        println!("Running test with input: {:?}", input); // Print each test input
         let cleaned = input.create_prefix_sanitized();
         prop_assert!(cleaned.len() <= 63);
         prop_assert!(cleaned.chars().all(|c| c.is_ascii_lowercase() || c == '_'));
