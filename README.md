@@ -1,4 +1,4 @@
-# TypeID Prefix
+# `TypeID` Prefix
 
 [![Crates.io](https://img.shields.io/crates/v/typeid_prefix.svg)](https://crates.io/crates/typeid_prefix)
 [![Documentation](https://docs.rs/typeid_prefix/badge.svg)](https://docs.rs/typeid_prefix)
@@ -8,9 +8,9 @@ A Rust library that implements a type-safe version of the TypePrefix section of 
 
 ## Features
 
-- **Type-safe**: Ensures that TypeID prefixes conform to the specification.
-- **Validation**: Provides robust validation for TypeID prefixes.
-- **Sanitization**: Offers methods to clean and sanitize input strings into valid TypeID prefixes.
+- **Type-safe**: Ensures that `TypeID` prefixes conform to the specification.
+- **Validation**: Provides robust validation for `TypeID` prefixes.
+- **Sanitization**: Offers methods to clean and sanitize input strings into valid `TypeID` prefixes.
 - **Zero-cost abstractions**: Designed to have minimal runtime overhead.
 - **Optional tracing**: Integrates with the `tracing` crate for logging (optional feature).
 
@@ -55,7 +55,7 @@ fn main() {
 
 ### Validation
 
-The `TypeIdPrefix` type ensures that all instances conform to the TypeID specification:
+The `TypeIdPrefix` type ensures that all instances conform to the `TypeID` specification:
 
 - Maximum length of 63 characters
 - Contains only lowercase ASCII letters and underscores
