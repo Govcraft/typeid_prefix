@@ -139,6 +139,12 @@ where
     }
 }
 
+impl Default for TypeIdPrefix {
+    fn default() -> Self {
+        todo!()
+    }
+}
+
 impl Deref for TypeIdPrefix {
     type Target = String;
 
