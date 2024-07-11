@@ -1,5 +1,8 @@
-use proptest::prelude::*;
 use std::convert::TryFrom;
+
+use proptest::prelude::*;
+use proptest::test_runner::{Config, FileFailurePersistence};
+
 use typeid_prefix::prelude::*;
 
 mod proofs;
