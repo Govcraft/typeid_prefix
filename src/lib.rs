@@ -82,7 +82,7 @@ mod error;
 /// let invalid = TypeIdPrefix::try_from("Invalid_Prefix");
 /// assert!(invalid.is_err());
 /// ```
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Default, Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "arbitrary", derive(arbitrary::Arbitrary))]
 pub struct TypeIdPrefix(String);
 
