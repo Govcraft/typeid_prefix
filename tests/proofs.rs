@@ -1,7 +1,7 @@
 #[cfg(kani)]
 mod verification {
     use std::convert::TryFrom;
-    use typeid_prefix::{TypeIdPrefix, Sanitize};
+    use typeid_prefix::{TypeIdPrefix, PrefixFactory};
     use kani::Arbitrary;
 
     #[derive(Debug)]
