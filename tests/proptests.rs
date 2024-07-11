@@ -1,6 +1,6 @@
 use proptest::prelude::*;
 use std::convert::TryFrom;
-use typeid_prefix::{PrefixFactory, TypeIdPrefix};
+use typeid_prefix::prelude::*;
 
 mod proofs;
 
