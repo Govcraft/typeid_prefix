@@ -58,10 +58,8 @@ use std::ops::Deref;
 #[cfg(feature = "instrument")]
 use tracing;
 
-use crate::error::ValidationError;
-
+pub use crate::error::ValidationError;
 mod error;
-
 pub mod prelude {
     //! A prelude for the `TypeID` prefix crate.
     //!
@@ -73,7 +71,7 @@ pub mod prelude {
     //! use typeid_prefix::prelude::*;
     //! ```
 
-    pub use crate::{Sanitize, TypeIdPrefix, Validate};
+    pub use crate::{Sanitize, TypeIdPrefix, Validate, ValidationError};
 
 }
 
