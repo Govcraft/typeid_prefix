@@ -67,7 +67,7 @@ impl PartialEq<TypeIdPrefix> for &str {
 /// Implements the `FromStr` trait for `TypeIdPrefix`.
 ///
 /// This implementation allows creating a `TypeIdPrefix` from a string slice,
-/// validating the input according to the TypeID specification.
+/// validating the input according to the `TypeID` specification.
 ///
 /// # Examples
 ///
