@@ -70,7 +70,7 @@ impl fmt::Display for ValidationError {
     }
 }
 
-/// Implements the standard Error trait for ValidationError.
+/// Implements the standard Error trait for `ValidationError`.
 ///
 /// This allows `ValidationError` to be used with the `std::error::Error` trait,
 /// enabling better interoperability with error handling mechanisms in Rust.
