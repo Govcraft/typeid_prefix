@@ -1,4 +1,5 @@
 use std::str::FromStr;
+
 use crate::{TypeIdPrefix, ValidationError};
 
 /// A trait for creating valid `TypeIdPrefix`s from a given input.
