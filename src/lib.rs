@@ -41,7 +41,7 @@
 //! assert!(result.is_err());
 //!
 //! // Sanitize an invalid string
-//! let sanitized = "Invalid_Prefix123".sanitize_and_create();
+//! let sanitized = "Invalid_Prefix123".create_sanitized_prefix();
 //! assert_eq!(sanitized.as_str(), "invalid_prefix");
 //! ```
 //!
@@ -111,7 +111,7 @@ pub struct TypeIdPrefix(String);
 /// ```
 /// use typeid_prefix::Sanitize;
 ///
-/// let sanitized = "Invalid String 123!@#".sanitize_and_create();
+/// let sanitized = "Invalid String 123!@#".create_sanitized_prefix();
 /// assert_eq!(sanitized.as_str(), "invalidstring");
 /// ```
 pub trait Sanitize {
@@ -122,7 +122,7 @@ pub trait Sanitize {
     ///
     /// If the input is invalid and cannot be sanitized into a valid prefix,
     /// an empty `TypeIdPrefix` will be returned.
-    fn sanitize_and_create(&self) -> TypeIdPrefix
+    fn create_sanitized_prefix(&self) -> TypeIdPrefix
     where
         Self: AsRef<str>;
 }
@@ -144,7 +144,7 @@ impl<T> Sanitize for T
 where
     T: AsRef<str>,
 {
-    fn sanitize_and_create(&self) -> TypeIdPrefix {
+    fn create_sanitized_prefix(&self) -> TypeIdPrefix {
         let input = TypeIdPrefix::clean_inner(self.as_ref());
         TypeIdPrefix::validate(&input).unwrap_or_else(|e| {
             #[cfg(feature = "instrument")]
@@ -372,7 +372,7 @@ mod tests {
     #[test]
     fn test_type_id_spaces_sanitize() {
         assert_eq!(
-            "Invalid String with Spaces!!__".sanitize_and_create().as_str(),
+            "Invalid String with Spaces!!__".create_sanitized_prefix().as_str(),
             "invalidstringwithspaces"
         );
     }
@@ -380,7 +380,7 @@ mod tests {
     #[test]
     fn test_type_id_truncation() {
         assert_eq!(
-            "A_valid_string_that_is_way_too_long_and_should_be_truncated_to_63_chars".sanitize_and_create().as_str(),
+            "A_valid_string_that_is_way_too_long_and_should_be_truncated_to_63_chars".create_sanitized_prefix().as_str(),
             "a_valid_string_that_is_way_too_long_and_should_be_truncated_to"
         );
     }
@@ -388,7 +388,7 @@ mod tests {
     #[test]
     fn test_type_id_underscores_sanitize() {
         assert_eq!(
-            "_underscores__everywhere__".sanitize_and_create().as_str(),
+            "_underscores__everywhere__".create_sanitized_prefix().as_str(),
             "underscores__everywhere"
         );
     }
@@ -396,7 +396,7 @@ mod tests {
     #[test]
     fn test_typeid_prefix_non_ascii() {
         assert!(TypeIdPrefix::try_from("🌀").is_err());
-        let sanitized_input = "🌀".sanitize_and_create();
+        let sanitized_input = "🌀".create_sanitized_prefix();
         assert!(sanitized_input.as_str().is_empty(), "Prefix was not empty: {sanitized_input}");
     }
 
@@ -428,7 +428,7 @@ mod tests {
             ValidationError::ExceedsMaxLength
         );
         assert_eq!(
-            input.sanitize_and_create().as_str(),
+            input.create_sanitized_prefix().as_str(),
             "a_valid_string_with_underscores_and_length_of__characters"
         );
     }
@@ -439,7 +439,7 @@ mod tests {
             TypeIdPrefix::try_from("InvalidString").unwrap_err(),
             ValidationError::InvalidStartCharacter
         );
-        assert_eq!("InvalidString".sanitize_and_create().as_str(), "invalidstring");
+        assert_eq!("InvalidString".create_sanitized_prefix().as_str(), "invalidstring");
     }
 
     #[test]
@@ -448,7 +448,7 @@ mod tests {
             TypeIdPrefix::try_from("_invalid").unwrap_err(),
             ValidationError::StartsWithUnderscore
         );
-        assert_eq!("_invalid".sanitize_and_create().as_str(), "invalid");
+        assert_eq!("_invalid".create_sanitized_prefix().as_str(), "invalid");
     }
 
     #[test]
@@ -457,7 +457,7 @@ mod tests {
             TypeIdPrefix::try_from("invalid_").unwrap_err(),
             ValidationError::EndsWithUnderscore
         );
-        assert_eq!("invalid_".sanitize_and_create().as_str(), "invalid");
+        assert_eq!("invalid_".create_sanitized_prefix().as_str(), "invalid");
     }
 
     #[test]
@@ -466,7 +466,7 @@ mod tests {
             TypeIdPrefix::try_from("invalid string with spaces").unwrap_err(),
             ValidationError::ContainsInvalidCharacters
         );
-        assert_eq!("invalid string with spaces".sanitize_and_create().as_str(), "invalidstringwithspaces");
+        assert_eq!("invalid string with spaces".create_sanitized_prefix().as_str(), "invalidstringwithspaces");
     }
 
     #[test]
@@ -482,7 +482,7 @@ mod tests {
             TypeIdPrefix::try_from(input.as_str()).unwrap_err(),
             ValidationError::ExceedsMaxLength
         );
-        assert_eq!(input.sanitize_and_create().as_str(), "a".repeat(63));
+        assert_eq!(input.create_sanitized_prefix().as_str(), "a".repeat(63));
     }
 
     #[test]
@@ -491,7 +491,7 @@ mod tests {
             TypeIdPrefix::try_from("InvalidString").unwrap_err(),
             ValidationError::InvalidStartCharacter
         );
-        assert_eq!("InvalidString".sanitize_and_create().as_str(), "invalidstring");
+        assert_eq!("InvalidString".create_sanitized_prefix().as_str(), "invalidstring");
     }
 
     #[test]
@@ -500,7 +500,7 @@ mod tests {
             TypeIdPrefix::try_from("invalid_string!").unwrap_err(),
             ValidationError::InvalidEndCharacter
         );
-        assert_eq!("invalid_string!".sanitize_and_create().as_str(), "invalid_string");
+        assert_eq!("invalid_string!".create_sanitized_prefix().as_str(), "invalid_string");
     }
 
     #[test]
@@ -509,7 +509,7 @@ mod tests {
             TypeIdPrefix::try_from("1invalid").unwrap_err(),
             ValidationError::InvalidStartCharacter
         );
-        assert_eq!("1invalid".sanitize_and_create().as_str(), "invalid");
+        assert_eq!("1invalid".create_sanitized_prefix().as_str(), "invalid");
     }
 
     #[test]
@@ -518,6 +518,6 @@ mod tests {
             TypeIdPrefix::try_from("invalid1").unwrap_err(),
             ValidationError::InvalidEndCharacter
         );
-        assert_eq!("invalid1".sanitize_and_create().as_str(), "invalid");
+        assert_eq!("invalid1".create_sanitized_prefix().as_str(), "invalid");
     }
 }
