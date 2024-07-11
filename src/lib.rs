@@ -63,6 +63,7 @@ pub use crate::error::ValidationError;
 
 mod error;
 mod traits;
+mod type_id_prefix;
 
 pub mod prelude {
     //! A prelude for the `TypeID` prefix crate.
@@ -103,16 +104,6 @@ pub mod prelude {
 pub struct TypeIdPrefix(String);
 
 
-/// A marker trait for types that can be validated as a `TypeID` prefix.
-///
-/// This trait is automatically implemented for any type that implements
-/// `AsRef<str>` and can be converted to a `TypeIdPrefix` using `TryFrom`.
-pub trait Validate {}
-
-impl<T> Validate for T
-where
-    T: AsRef<str> + TryFrom<T, Error=ValidationError>,
-{}
 
 
 
