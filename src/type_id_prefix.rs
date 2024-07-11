@@ -1,6 +1,8 @@
+use std::borrow::Borrow;
 use std::fmt;
 use std::ops::Deref;
 use std::str::FromStr;
+
 use crate::ValidationError;
 
 /// Represents a valid `TypeID` prefix as defined by the `TypeID` specification.
@@ -28,13 +30,34 @@ use crate::ValidationError;
 pub struct TypeIdPrefix(String);
 
 
+impl PartialEq<str> for TypeIdPrefix {
+    fn eq(&self, other: &str) -> bool {
+        self.0 == other
+    }
+}
 
+impl PartialEq<TypeIdPrefix> for str {
+    fn eq(&self, other: &TypeIdPrefix) -> bool {
+        self == other.0
+    }
+}
 
+impl Borrow<str> for TypeIdPrefix {
+    fn borrow(&self) -> &str {
+        &self.0
+    }
+}
+
+impl AsRef<str> for TypeIdPrefix {
+    fn as_ref(&self) -> &str {
+        &self.0
+    }
+}
 
 impl Deref for TypeIdPrefix {
-    type Target = String;
+    type Target = str;
 
-    fn deref(&self) -> &String {
+    fn deref(&self) -> &Self::Target {
         &self.0
     }
 }
@@ -100,6 +123,7 @@ impl FromStr for TypeIdPrefix {
         Self::validate(s)
     }
 }
+
 impl TryFrom<String> for TypeIdPrefix
 {
     type Error = ValidationError;
