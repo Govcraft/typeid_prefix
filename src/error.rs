@@ -1,15 +1,15 @@
 use std::fmt;
 
-/// Represents errors that can occur during validation of TypeID prefixes.
+/// Represents errors that can occur during validation of `TypeID` prefixes.
 ///
 /// This enum encapsulates various error conditions that may arise when validating
-/// a TypeID prefix according to the TypeID specification.
+/// a `TypeID` prefix according to the `TypeID` specification.
 #[derive(Debug, PartialEq, Eq)]
 pub enum ValidationError {
     /// The input exceeds the maximum allowed length of 63 characters.
     ExceedsMaxLength,
 
-    /// The input contains characters that are not allowed in a TypeID prefix.
+    /// The input contains characters that are not allowed in a `TypeID` prefix.
     ///
     /// Valid characters are lowercase ASCII letters and underscores.
     ContainsInvalidCharacters,
