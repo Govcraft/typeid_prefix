@@ -76,7 +76,7 @@ pub trait PrefixFactory {
     /// # Errors
     ///
     /// This method will return a `ValidationError` if the input does not meet
-    /// the requirements of a valid TypeID prefix. Possible error conditions include:
+    /// the requirements of a valid `TypeID` prefix. Possible error conditions include:
     ///
     /// - The input exceeds the maximum allowed length of 63 characters.
     /// - The input contains characters other than lowercase ASCII letters and underscores.
