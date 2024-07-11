@@ -54,12 +54,15 @@ use std::cmp::PartialEq;
 use std::convert::TryFrom;
 use std::fmt;
 use std::ops::Deref;
+use std::str::FromStr;
 
 #[cfg(feature = "instrument")]
 use tracing;
 
 pub use crate::error::ValidationError;
+
 mod error;
+
 pub mod prelude {
     //! A prelude for the `TypeID` prefix crate.
     //!
@@ -72,7 +75,6 @@ pub mod prelude {
     //! ```
 
     pub use crate::{Sanitize, TypeIdPrefix, Validate, ValidationError};
-
 }
 
 /// Represents a valid `TypeID` prefix as defined by the `TypeID` specification.
@@ -185,6 +187,42 @@ impl PartialEq<TypeIdPrefix> for &str {
     }
 }
 
+/// Implements the `FromStr` trait for `TypeIdPrefix`.
+///
+/// This implementation allows creating a `TypeIdPrefix` from a string slice,
+/// validating the input according to the TypeID specification.
+///
+/// # Examples
+///
+/// ```
+/// use std::str::FromStr;
+/// use typeid_prefix::TypeIdPrefix;
+///
+/// let valid_prefix = TypeIdPrefix::from_str("user").expect("Valid prefix");
+/// assert_eq!(valid_prefix.as_str(), "user");
+///
+/// let invalid_prefix = TypeIdPrefix::from_str("123");
+/// assert!(invalid_prefix.is_err());
+/// ```
+///
+/// # Errors
+///
+/// This method will return a `ValidationError` if the input string does not meet
+/// the requirements of a valid TypeID prefix. Possible error conditions include:
+///
+/// - The input exceeds the maximum allowed length of 63 characters.
+/// - The input contains characters other than lowercase ASCII letters and underscores.
+/// - The input starts or ends with an underscore.
+/// - The input does not start or end with a lowercase alphabetic character.
+///
+/// For more details on error conditions, see the `ValidationError` enum.
+impl FromStr for TypeIdPrefix {
+    type Err = ValidationError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        Self::validate(s)
+    }
+}
 impl TryFrom<String> for TypeIdPrefix
 {
     type Error = ValidationError;
