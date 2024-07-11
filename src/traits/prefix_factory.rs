@@ -104,7 +104,7 @@ where
         TypeIdPrefix::validate(&input).unwrap_or_else(|e| {
             #[cfg(feature = "instrument")]
             tracing::warn!("Invalid TypeIdPrefix: {:?}. Using empty string instead.", e);
-            TypeIdPrefix(String::new())
+            TypeIdPrefix::default()
         })
     }
     fn try_create_prefix(&self) -> Result<TypeIdPrefix, ValidationError> {
