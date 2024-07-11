@@ -75,8 +75,8 @@ pub mod prelude {
     //! ```
     //! use typeid_prefix::prelude::*;
     //! ```
-    pub use crate::traits::PrefixFactory;
-    pub use crate::{TypeIdPrefix, Validate, ValidationError};
+    pub use crate::traits::{PrefixFactory, Validate};
+    pub use crate::{TypeIdPrefix, ValidationError};
 }
 
 /// Represents a valid `TypeID` prefix as defined by the `TypeID` specification.
