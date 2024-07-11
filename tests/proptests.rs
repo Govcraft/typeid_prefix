@@ -15,6 +15,7 @@ proptest! {
     })]
     #[test]
     fn test_typeidprefix_try_from_and_sanitize(input in "\\PC*") {
+        println!("Running test with input: {:?}", input); // Print each test input
         let try_from_result = TypeIdPrefix::try_from(input.clone());
         let sanitized = input.create_prefix_sanitized();
 
