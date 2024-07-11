@@ -50,20 +50,18 @@
 //! When the `instrument` feature is enabled, the crate will log validation errors
 //! using the `tracing` crate.
 
-use std::cmp::PartialEq;
-use std::convert::TryFrom;
-use std::ops::Deref;
-use std::str::FromStr;
 
 #[cfg(feature = "instrument")]
 use tracing;
+
+pub use type_id_prefix::TypeIdPrefix;
 
 pub use crate::error::ValidationError;
 
 mod error;
 mod traits;
 mod type_id_prefix;
-pub use type_id_prefix::TypeIdPrefix;
+
 pub mod prelude {
     //! A prelude for the `TypeID` prefix crate.
     //!
@@ -74,13 +72,14 @@ pub mod prelude {
     //! ```
     //! use typeid_prefix::prelude::*;
     //! ```
-    pub use crate::traits::{PrefixFactory, Validate};
     pub use crate::{TypeIdPrefix, ValidationError};
+    pub use crate::traits::{PrefixFactory, Validate};
 }
 
 #[cfg(test)]
 mod tests {
     use std::convert::TryFrom;
+
     use crate::traits::PrefixFactory;
 
     use super::*;
