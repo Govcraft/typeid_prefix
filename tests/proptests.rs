@@ -5,6 +5,10 @@ use typeid_prefix::prelude::*;
 mod proofs;
 
 proptest! {
+        #![proptest_config(Config {
+        failure_persistence: Some(Box::new(FileFailurePersistence::WithSource("../src".into()))),
+        .. Config::default()
+    })]
     #[test]
     fn test_typeidprefix_try_from_and_sanitize(input in "\\PC*") {
         let try_from_result = TypeIdPrefix::try_from(input.clone());
