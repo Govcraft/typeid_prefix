@@ -6,6 +6,9 @@
 
 A Rust library that implements a type-safe version of the TypePrefix section of the [TypeID Specification](https://github.com/jetpack-io/typeid).
 
+Combined with the [TypeIdSuffix crate](https://crates.io/crates/typeid_suffix) to comprise the [mti (Magic Type Id) crate](https://crates.io/crates/mti).
+
+Use the [mti (Magic Type Id) crate](https://crates.io/crates/mti) for a holistic implementation of the TypeID specification.
 ## Features
 
 - **Type-safe**: Ensures that `TypeID` prefixes conform to the specification.
