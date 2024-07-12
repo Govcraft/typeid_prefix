@@ -80,7 +80,7 @@ pub mod prelude {
 mod tests {
     use std::convert::TryFrom;
 
-    use crate::traits::PrefixFactory;
+    use crate::prelude::*;
 
     use super::*;
 
