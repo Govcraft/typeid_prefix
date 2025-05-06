@@ -64,6 +64,7 @@ The `TypeIdPrefix` type ensures that all instances conform to the `TypeID` speci
 - Contains only lowercase ASCII letters and underscores
 - Does not start or end with an underscore
 - Starts and ends with a lowercase letter
+- An empty string is **not** considered a valid prefix
 
 ```rust
 use typeid_prefix::TypeIdPrefix;

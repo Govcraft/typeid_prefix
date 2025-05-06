@@ -25,7 +25,7 @@ proptest! {
         if input.len() > 63 {
             prop_assert!(try_from_result.is_err());
         } else if input.is_empty() {
-            prop_assert!(try_from_result.is_ok());
+            prop_assert_eq!(try_from_result.unwrap_err(), ValidationError::IsEmpty);
         } else {
             let is_ascii = input.is_ascii();
             let starts_with_valid_char = input.chars().next().map_or(false, |c| c.is_ascii_lowercase());
@@ -44,8 +44,12 @@ proptest! {
         prop_assert!(!sanitized.starts_with('_'));
         prop_assert!(!sanitized.ends_with('_'));
 
-        // Ensure sanitized version is always valid
-        prop_assert!(TypeIdPrefix::try_from(sanitized.as_str()).is_ok());
+        // Ensure sanitized version is always valid, unless it's empty
+        if sanitized.is_empty() {
+            prop_assert_eq!(TypeIdPrefix::try_from(sanitized.as_str()).unwrap_err(), ValidationError::IsEmpty);
+        } else {
+            prop_assert!(TypeIdPrefix::try_from(sanitized.as_str()).is_ok());
+        }
     }
 
     #[test]
@@ -58,7 +62,7 @@ proptest! {
         if input.len() > 63 {
             prop_assert!(try_from_result.is_err());
         } else if input.is_empty() {
-            prop_assert!(try_from_result.is_ok());
+            prop_assert_eq!(try_from_result.unwrap_err(), ValidationError::IsEmpty);
         } else {
             let is_ascii = input.is_ascii();
             let starts_with_valid_char = input.chars().next().map_or(false, |c| c.is_ascii_lowercase());
@@ -77,8 +81,12 @@ proptest! {
         prop_assert!(!sanitized.starts_with('_'));
         prop_assert!(!sanitized.ends_with('_'));
 
-        // Ensure sanitized version is always valid
-        prop_assert!(TypeIdPrefix::try_from(sanitized.as_str()).is_ok());
+        // Ensure sanitized version is always valid, unless it's empty
+        if sanitized.is_empty() {
+            prop_assert_eq!(TypeIdPrefix::try_from(sanitized.as_str()).unwrap_err(), ValidationError::IsEmpty);
+        } else {
+            prop_assert!(TypeIdPrefix::try_from(sanitized.as_str()).is_ok());
+        }
     }
 
     #[test]
@@ -89,6 +97,10 @@ proptest! {
         prop_assert!(cleaned.chars().all(|c| c.is_ascii_lowercase() || c == '_'));
         prop_assert!(!cleaned.starts_with('_'));
         prop_assert!(!cleaned.ends_with('_'));
-        prop_assert!(TypeIdPrefix::try_from(cleaned.as_str()).is_ok());
+        if cleaned.is_empty() {
+            prop_assert_eq!(TypeIdPrefix::try_from(cleaned.as_str()).unwrap_err(), ValidationError::IsEmpty);
+        } else {
+            prop_assert!(TypeIdPrefix::try_from(cleaned.as_str()).is_ok());
+        }
     }
 }

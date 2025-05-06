@@ -117,7 +117,10 @@ mod tests {
 
     #[test]
     fn test_typeid_prefix_empty() {
-        assert!(TypeIdPrefix::try_from("").is_ok());
+        assert_eq!(
+            TypeIdPrefix::try_from("").unwrap_err(),
+            ValidationError::IsEmpty
+        );
     }
 
     #[test]
@@ -234,5 +237,35 @@ mod tests {
             ValidationError::InvalidEndCharacter
         );
         assert_eq!("invalid1".create_prefix_sanitized().as_str(), "invalid");
+    }
+
+    #[test]
+    fn test_clean_inner_only_underscores() {
+        // This would have panicked before the fix
+        let sanitized = "___".create_prefix_sanitized();
+        assert!(sanitized.as_str().is_empty());
+    }
+
+    #[test]
+    fn test_clean_inner_only_invalid_chars() {
+        // This would have panicked before the fix if it contained only underscores
+        // after filtering invalid characters
+        let sanitized = "123_456".create_prefix_sanitized();
+        assert!(sanitized.as_str().is_empty());
+    }
+
+    #[test]
+    fn test_clean_inner_mixed_with_only_underscores_after_filtering() {
+        // This would have panicked before the fix because after filtering,
+        // only underscores remain, which are then stripped
+        let sanitized = "123_456_789".create_prefix_sanitized();
+        assert!(sanitized.as_str().is_empty());
+    }
+
+    #[test]
+    fn test_clean_inner_with_valid_chars_and_underscores() {
+        // This should work correctly after the fix
+        let sanitized = "_abc_def_".create_prefix_sanitized();
+        assert_eq!(sanitized.as_str(), "abc_def");
     }
 }

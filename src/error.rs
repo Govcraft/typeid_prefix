@@ -25,6 +25,9 @@ pub enum ValidationError {
 
     /// The input does not end with a lowercase alphabetic character.
     InvalidEndCharacter,
+
+    /// The input is an empty string, which is not allowed.
+    IsEmpty,
 }
 
 impl fmt::Display for ValidationError {
@@ -60,6 +63,9 @@ impl fmt::Display for ValidationError {
             }
             Self::InvalidEndCharacter => {
                 "Input must end with a lowercase alphabetic character"
+            }
+            Self::IsEmpty => {
+                "Input cannot be empty"
             }
         };
 

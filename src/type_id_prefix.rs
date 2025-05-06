@@ -214,7 +214,7 @@ impl TypeIdPrefix {
         }
 
         if input.is_empty() {
-            return Ok(Self(input.to_string()));
+            return Err(ValidationError::IsEmpty);
         }
 
         if !input.is_ascii() {
@@ -256,14 +256,9 @@ impl TypeIdPrefix {
             .filter(|&c| (c.is_ascii_lowercase() || c == '_') && c.is_ascii())
             .collect::<String>();
 
-        // Remove leading and trailing underscores
-        while result.starts_with('_') {
-            result.remove(0);
-        }
-
-        while result.ends_with('_') {
-            result.pop();
-        }
+        // Remove leading and trailing underscores safely using trim_matches
+        // This avoids potential panics when the string is empty or contains only underscores
+        result = result.trim_matches('_').to_string();
 
         result
     }
