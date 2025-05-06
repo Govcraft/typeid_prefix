@@ -5,6 +5,9 @@ use std::str::FromStr;
 
 use crate::ValidationError;
 
+#[cfg(feature = "serde")]
+use serde::{Deserialize, Deserializer, Serialize, Serializer};
+
 /// Represents a valid `TypeID` prefix as defined by the `TypeID` specification.
 ///
 /// A `TypeIdPrefix` is guaranteed to:
@@ -28,6 +31,31 @@ use crate::ValidationError;
 #[derive(Default, Debug, Clone, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "arbitrary", derive(arbitrary::Arbitrary))]
 pub struct TypeIdPrefix(String);
+
+#[cfg(feature = "serde")]
+impl Serialize for TypeIdPrefix {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        // Serialize TypeIdPrefix as a string
+        serializer.serialize_str(&self.0)
+    }
+}
+
+#[cfg(feature = "serde")]
+impl<'de> Deserialize<'de> for TypeIdPrefix {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        // Deserialize as a string first
+        let s = String::deserialize(deserializer)?;
+        
+        // Then validate according to TypeID specification
+        Self::validate(&s).map_err(serde::de::Error::custom)
+    }
+}
 
 
 impl PartialEq<str> for TypeIdPrefix {
@@ -252,6 +280,7 @@ impl TypeIdPrefix {
     /// assert_eq!(prefix.as_str(), "valid_prefix");
     /// ```
     #[must_use]
+    #[allow(clippy::missing_const_for_fn)]
     pub fn as_str(&self) -> &str {
         &self.0
     }

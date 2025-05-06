@@ -1,3 +1,5 @@
+#![doc(hidden)]
+
 use std::convert::TryFrom;
 
 use proptest::prelude::*;
@@ -10,7 +12,7 @@ mod proofs;
 proptest! {
         #![proptest_config(Config {
         cases:1000,
-        failure_persistence: Some(Box::new(FileFailurePersistence::WithSource("../src".into()))),
+        failure_persistence: Some(Box::new(FileFailurePersistence::Off)),
         .. Config::default()
     })]
     #[test]

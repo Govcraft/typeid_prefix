@@ -1,3 +1,5 @@
+#![doc(hidden)]
+
 #[cfg(kani)]
 mod verification {
     use std::convert::TryFrom;

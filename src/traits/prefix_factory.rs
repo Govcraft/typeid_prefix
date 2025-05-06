@@ -10,7 +10,7 @@ use crate::{TypeIdPrefix, ValidationError};
 /// # Examples
 ///
 /// ```
-/// use typeid_prefix::PrefixFactory;
+/// use typeid_prefix::prelude::PrefixFactory;
 ///
 /// let sanitized = "Invalid String 123!@#".create_prefix_sanitized();
 /// assert_eq!(sanitized.as_str(), "invalidstring");

@@ -63,7 +63,7 @@ impl fmt::Display for ValidationError {
             }
         };
 
-        #[cfg(feature = "logging")]
+        #[cfg(feature = "instrument")]
         tracing::error!("ValidationError: {}", error_message);
 
         write!(f, "{error_message}")
