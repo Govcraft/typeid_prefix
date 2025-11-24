@@ -192,4 +192,8 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## Credits
 
-This crate implements the `prefix` validation and sanitization rules from the [TypeID Specification](https://github.com/jetpack-io/typeid) created by Jetpack.io.
+This crate implements the `prefix` validation and sanitization rules from the [TypeID Specification](https://github.com/jetpack-io/typeid) created by Jetpack.io.## Sponsor
+
+Govcraft is a one-person shop—no corporate backing, no investors, just me building useful tools. If this project helps you, [sponsoring](https://github.com/sponsors/Govcraft) keeps the work going.
+
+[![Sponsor on GitHub](https://img.shields.io/badge/Sponsor-%E2%9D%A4-%23db61a2?logo=GitHub)](https://github.com/sponsors/Govcraft)
